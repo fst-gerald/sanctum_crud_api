@@ -10,22 +10,24 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    public function login(Request $request)
+    public function getSanctumTokenFromCredentials(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-            'device_name' => 'required',
+            'email'     => 'required|email',
+            'password'  => 'required',
+            'device_id' => 'required'
         ]);
-     
+
         $user = User::where('email', $request->email)->first();
-     
+
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return [
-                'email' => ['The provided credentials are incorrect.']
-            ];
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
         }
-     
-        return $user->createToken($request->device_name)->plainTextToken;
+
+        $user->tokens()->where('name', $request->device_id)->delete();
+
+        return $user->createToken($request->device_id)->plainTextToken;
     }
 }
