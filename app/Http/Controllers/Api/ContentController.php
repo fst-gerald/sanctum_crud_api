@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ContentRequest;
 use App\Models\Content;
 use App\Repositories\Interfaces\ContentRepositoryInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ContentController extends Controller
@@ -33,10 +33,10 @@ class ContentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param ContentRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ContentRequest $request): JsonResponse
     {
         try {
             $content = $this->contentRepository->store($request->all());
@@ -64,11 +64,11 @@ class ContentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param ContentRequest $request
      * @param Content $content
      * @return JsonResponse
      */
-    public function update(Request $request, Content $content): JsonResponse
+    public function update(ContentRequest $request, Content $content): JsonResponse
     {
         try {
             $content = $this->contentRepository->update($request->all(), $content);
