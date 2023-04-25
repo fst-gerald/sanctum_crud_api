@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class LoginController extends Controller
 {
@@ -21,9 +21,9 @@ class LoginController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            $message = ['message' => 'The provided credentials are incorrect.'];
+
+            return response()->json($message, ResponseAlias::HTTP_BAD_REQUEST);
         }
 
         $user->tokens()->where('name', $request->device_id)->delete();
