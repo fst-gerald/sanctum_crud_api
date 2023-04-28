@@ -17,13 +17,16 @@ use App\Http\Controllers\Api\LoginController;
 |
 */
 
-Route::post('/sanctum/token', [LoginController::class, 'getSanctumTokenFromCredentials']);
+Route::post('/auth/token', [LoginController::class, 'getSanctumTokenFromCredentials']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
+    Route::post('/auth/logout', [LogoutController::class, 'logout']);
+
+    Route::prefix('users')->group(function() {
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
     });
-    Route::post('/logout', [LogoutController::class, 'logout']);
 
     Route::apiResource('contents', ContentController::class);
 });
