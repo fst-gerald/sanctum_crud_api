@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\LogoutController;
+use App\Http\Controllers\Api\MailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LoginController;
@@ -30,3 +31,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::apiResource('contents', ContentController::class);
 });
+
+// TODO: make this secure
+Route::post('/mail/sendSimple', [MailController::class, 'sendSimpleEmail']);
