@@ -19,6 +19,7 @@ class MailController extends Controller
             $sendMail = new sendSimpleMail($mailData);
 
             $this->dispatch($sendMail);
+            dump($mailData);
 
             return response()->json($mailData, ResponseAlias::HTTP_OK);
         } catch (\Exception $e) {

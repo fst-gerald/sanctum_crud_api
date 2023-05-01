@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\LoginHistory;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,6 +28,8 @@ class LoginController extends Controller
         }
 
         $user->tokens()->where('name', $request->device_id)->delete();
+
+        event(new LoginHistory($user));
 
         return $user->createToken($request->device_id)->plainTextToken;
     }
