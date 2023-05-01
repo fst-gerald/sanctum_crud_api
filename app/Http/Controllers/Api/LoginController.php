@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class LoginController extends Controller
@@ -30,6 +31,8 @@ class LoginController extends Controller
         $user->tokens()->where('name', $request->device_id)->delete();
 
         event(new LoginHistory($user));
+
+        Log::info('User logged-in.', $user->toArray());
 
         return $user->createToken($request->device_id)->plainTextToken;
     }
