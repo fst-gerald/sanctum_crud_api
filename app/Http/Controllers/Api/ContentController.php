@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ContentRequest;
 use App\Models\Content;
+use App\Repositories\ContentAdapter;
 use App\Repositories\Interfaces\ContentRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -12,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 class ContentController extends Controller
 {
     private ContentRepositoryInterface $contentRepository;
+
+    private ContentAdapter $contentAdapter;
 
     public function __construct(ContentRepositoryInterface $contentRepository)
     {
@@ -88,7 +91,11 @@ class ContentController extends Controller
     public function destroy(Content $content): JsonResponse
     {
         try {
-            $this->contentRepository->destroy($content);
+            $contentData = $this->contentRepository->find($content);
+
+            $this->contentAdapter = new ContentAdapter($this->contentRepository);
+            
+            $this->contentAdapter->waitDestroy($contentData->toArray(), $content);
 
             return response()->json(null, ResponseAlias::HTTP_NO_CONTENT);
         } catch (\Exception $e) {

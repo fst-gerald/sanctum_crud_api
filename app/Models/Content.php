@@ -13,6 +13,7 @@ class Content extends Model
     protected $fillable = [
         'title',
         'details',
+        'waiting_delete_time',
         'user_id',
     ];
 
