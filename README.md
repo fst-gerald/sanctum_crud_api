@@ -13,6 +13,9 @@ then
 ```bash
 $ composer install
 ```
+```bash
+$ php artisan migrate --seed
+```
 
 ## Run project with sail
 This will only work after the installation of dependencies.
